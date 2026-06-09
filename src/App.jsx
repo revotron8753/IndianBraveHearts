@@ -9,7 +9,20 @@ const App = () => {
   const [progress, setProgress] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const [muted, setMuted] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
   const videoRef = useRef(null);
+
+  const closeMenu = () => setMenuOpen(false);
+
+  const navLinks = [
+    ['#home', 'Home'],
+    ['#about', 'About'],
+    ['#founder', 'Founders'],
+    ['#work', 'Our Work'],
+    ['#leadership', 'Leadership'],
+    ['#help', 'How To Help'],
+    ['#contact', 'Contact'],
+  ];
 
   const toggleMute = () => {
     const video = videoRef.current;
@@ -85,22 +98,29 @@ const App = () => {
 
       <header className={`site-header${scrolled ? ' scrolled' : ''}`}>
         <div className="header-inner">
-          <a className="brand" href="#home">
+          <a className="brand" href="#home" onClick={closeMenu}>
             <img className="brand-logo" src={logo} alt="Indian Bravehearts logo" />
             <span className="brand-text">
               <strong>INDIAN BRAVEHEARTS</strong>
               <span>Strong Alone, Stronger Together</span>
             </span>
           </a>
-          <nav>
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#founder">Founders</a>
-            <a href="#work">Our Work</a>
-            <a href="#leadership">Leadership</a>
-            <a href="#help">How To Help</a>
-            <a href="#contact">Contact</a>
-            <a className="donate-button" href="#donate">Donate</a>
+          <button
+            type="button"
+            className={`nav-toggle${menuOpen ? ' open' : ''}`}
+            aria-label="Toggle navigation menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <nav className={menuOpen ? 'open' : ''}>
+            {navLinks.map(([href, label]) => (
+              <a key={href} href={href} onClick={closeMenu}>{label}</a>
+            ))}
+            <a className="donate-button" href="#donate" onClick={closeMenu}>Donate</a>
           </nav>
         </div>
       </header>
