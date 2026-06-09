@@ -1,17 +1,24 @@
-import { useEffect, useState } from 'react';
-
-const PARTICLES = Array.from({ length: 22 }, (_, i) => ({
-  id: i,
-  left: ((i * 41 + 17) % 94) + 3,
-  top: ((i * 59 + 11) % 78) + 5,
-  delay: +((i * 0.55) % 7).toFixed(1),
-  size: 2 + (i % 3),
-  duration: +(5 + ((i * 0.4) % 4)).toFixed(1),
-}));
+import { useEffect, useRef, useState } from 'react';
+import logo from './public/Logo.jpeg';
+import anthemVideo from './public/Jan Gan Man.mp4';
+import founderPhoto from './public/Faces/Col. D.K. Dass.png';
+import sarahPhoto from './public/Faces/Sarah D Rawat.jpg';
+import flag from './public/indian-flag.png';
 
 const App = () => {
   const [progress, setProgress] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const videoRef = useRef(null);
+
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    const next = !video.muted;
+    video.muted = next;
+    if (!next) video.play().catch(() => {});
+    setMuted(next);
+  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -39,6 +46,17 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    let link = document.querySelector("link[rel='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.type = 'image/jpeg';
+    link.href = logo;
+  }, []);
+
+  useEffect(() => {
     const hero = document.querySelector('.hero-section');
     const onParallax = () => {
       if (hero) hero.style.backgroundPositionY = `${window.scrollY * 0.3}px`;
@@ -49,104 +67,151 @@ const App = () => {
 
   return (
     <div className="app">
+      <a className="skip-link" href="#home">Skip to main content</a>
       <div className="scroll-progress-bar" style={{ width: `${progress}%` }} />
 
-      <header className={`site-header${scrolled ? ' scrolled' : ''}`}>
-        <div className="brand">
-          <strong>INDIAN BRAVEHEARTS</strong>
-          <span>strong alone stronger together</span>
+      <div className="utility-bar">
+        <div className="utility-inner">
+          <p className="utility-left">
+            <img className="flag-icon" src={flag} alt="Flag of India" />
+            A Registered Trust — Indian Trusts Act, 1882 · Donations exempt under Sec. 80G
+          </p>
+          <div className="utility-right">
+            <a href="tel:+919810266662">+91 98102 66662</a>
+            <a href="mailto:dilipkdass@gmail.com">dilipkdass@gmail.com</a>
+          </div>
         </div>
-        <nav>
-          <a href="#home">HOME</a>
-          <a href="#about">ABOUT US</a>
-          <a href="#work">OUR WORK</a>
-          <a href="#supporters">OUR SUPPORTERS</a>
-          <a href="#help">HOW CAN YOU HELP?</a>
-          <a href="#contact">CONTACT US</a>
-          <a className="donate-button" href="#donate">DONATE</a>
-        </nav>
+      </div>
+
+      <header className={`site-header${scrolled ? ' scrolled' : ''}`}>
+        <div className="header-inner">
+          <a className="brand" href="#home">
+            <img className="brand-logo" src={logo} alt="Indian Bravehearts logo" />
+            <span className="brand-text">
+              <strong>INDIAN BRAVEHEARTS</strong>
+              <span>Strong Alone, Stronger Together</span>
+            </span>
+          </a>
+          <nav>
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#founder">Founders</a>
+            <a href="#work">Our Work</a>
+            <a href="#leadership">Leadership</a>
+            <a href="#help">How To Help</a>
+            <a href="#contact">Contact</a>
+            <a className="donate-button" href="#donate">Donate</a>
+          </nav>
+        </div>
       </header>
 
       <section id="home" className="hero-section home-hero">
-        <div className="hero-particles" aria-hidden="true">
-          {PARTICLES.map((p) => (
-            <span
-              key={p.id}
-              className="particle"
-              style={{
-                left: `${p.left}%`,
-                top: `${p.top}%`,
-                width: p.size,
-                height: p.size,
-                animationDelay: `${p.delay}s`,
-                animationDuration: `${p.duration}s`,
-              }}
-            />
-          ))}
-        </div>
+        <video
+          ref={videoRef}
+          className="hero-video"
+          src={anthemVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden="true"
+        />
+        <div className="hero-overlay" aria-hidden="true" />
+        <button
+          type="button"
+          className="hero-mute-toggle"
+          onClick={toggleMute}
+          aria-label={muted ? 'Unmute national anthem' : 'Mute national anthem'}
+        >
+          {muted ? '🔇 Play Anthem' : '🔊 Mute'}
+        </button>
         <div className="hero-tricolor-bar" aria-hidden="true" />
         <div className="hero-copy">
-          <p className="eyebrow">Honoring India's Heroes</p>
+          <p className="eyebrow">In Service of Those Who Served</p>
           <h1>
-            Strong alone,<br />
-            <span className="hero-accent">stronger together.</span>
+            For your tomorrow,<br />
+            <span className="hero-accent">they gave their today.</span>
           </h1>
           <p>
-            Indian Brave Hearts stands as a beacon of hope for the families of our nation's martyrs.
-            We provide unwavering support to widowed women, ensuring they rebuild their lives with
-            dignity, strength, and purpose. Every contribution helps heal wounds and honors the
-            ultimate sacrifice.
+            Indian Bravehearts is a not-for-profit trust devoted to the welfare, rehabilitation and
+            wellbeing of the entire armed-forces fraternity — all personnel under the Ministry of
+            Defence and the Ministry of Home Affairs, serving and retired, including veterans, battle
+            casualties, war widows, orphans and their families.
           </p>
           <div className="hero-buttons">
-            <a className="primary-button" href="#about">Discover Our Mission</a>
-            <a className="secondary-button" href="#donate">Make a Difference</a>
+            <a className="primary-button" href="#about">Our Mission</a>
+            <a className="secondary-button" href="#donate">Stand With Them</a>
           </div>
         </div>
       </section>
 
-      <div className="impact-strip animate">
-        <div className="stat-item">
-          <span className="stat-number">500+</span>
-          <span className="stat-label">Families Supported</span>
-        </div>
-        <div className="stat-item">
-          <span className="stat-number">1,200+</span>
-          <span className="stat-label">Children Educated</span>
-        </div>
-        <div className="stat-item">
-          <span className="stat-number">300+</span>
-          <span className="stat-label">Widows Empowered</span>
-        </div>
-        <div className="stat-item">
-          <span className="stat-number">Since 2018</span>
-          <span className="stat-label">Founded</span>
-        </div>
-      </div>
-
-      <section className="section panel quick-overview">
-        <div className="section-header animate">
+      {/* ─── About / Mission ──────────────────────────────────────────── */}
+      <section id="about" className="section panel animate">
+        <div className="section-header">
           <span className="dot"></span>
-          <h2>Our Impact in Action</h2>
+          <h2>Who We Are</h2>
         </div>
-        <div className="overview-grid">
+        <blockquote className="mission-quote">
+          “When you go home, tell them of us and say — for your tomorrow, we gave our today.”
+          <cite>The soldier's epitaph</cite>
+        </blockquote>
+        <p>
+          Indian Bravehearts is a not-for-profit NGO registered under The Indian Trusts Act, 1882,
+          and a proud initiative of an Army officer. We envision the welfare, rehabilitation and
+          wellbeing of the Indian Bravehearts fraternity — all armed forces of the Union under the
+          Ministry of Defence and the Ministry of Home Affairs, both serving and retired — including
+          the veterans, battle casualties, war widows, orphans and their families.
+        </p>
+        <p>
+          Through this platform our endeavour is to create awareness in society about their specific
+          issues and problems, to garner support from all quarters for their inclusive growth and the
+          resolution of their difficulties, and to coordinate and synergize the humanitarian efforts
+          for this community. We also seek to provide a cohesive platform for those doing well within
+          the fraternity to care for the deprived — irrespective of religion, caste and status, a
+          hallmark of the Forces.
+        </p>
+        <p>
+          A famous adage reminds us why this work matters: we must render assistance, in whatever way
+          possible, for the families of the martyrs, the war widows, and the aged and infirm
+          veterans. It is now that they require our care and support to live their today.
+        </p>
+      </section>
+
+      {/* ─── The realities they live with ─────────────────────────────── */}
+      <section className="section animate">
+        <div className="section-header">
+          <span className="dot"></span>
+          <h2>The Realities They Live With</h2>
+        </div>
+        <p>
+          The challenges faced by the armed-forces fraternity are unlike those of any other
+          profession, arising from the very nature of the duties they perform. Understanding them is
+          the first step toward standing with these families.
+        </p>
+        <div className="realities-grid">
           {[
             {
-              title: 'Empowering Widows',
-              text: "Through vocational training and financial literacy programs, we help widows achieve self-reliance. Stories like Priya's, who started her own tailoring business, inspire us to reach more families.",
-              delay: '0s',
+              title: 'Risk to Life',
+              text:
+                'Beyond the obvious risk from enemy action, terrorism and internal-security duties, soldiers face hazards the public rarely sees — death and injury during intensive training, in avalanches, high-altitude pulmonary edema and frostbite, and from live-ammunition and weapon-system failures. The stress of soldiering and early retirement leave many with a reduced life span of just 57–62 years, well below the national average.',
             },
             {
-              title: 'Supporting Children',
-              text: 'Education is the foundation of a brighter future. We provide scholarships, school supplies, and mentorship to ensure the children of martyrs never face barriers to learning.',
-              delay: '0.15s',
+              title: 'Psychological Strain',
+              text:
+                'Isolation and even hallucinations on remote posts along the LoC and at high altitude, the mental stress of being cut off from family, and the inability to take leave due to unit commitments take a heavy toll — at times leading to suicide, fratricide or desertion.',
             },
             {
-              title: 'Building Community',
-              text: 'Our network connects donors, volunteers, and survivors. Together, we create a supportive ecosystem where no family feels alone in their journey toward healing.',
-              delay: '0.3s',
+              title: 'Lack of Family Life',
+              text:
+                'Prolonged separation due to field postings, shortage of married accommodation, and constant operational alerts mean families often fend for themselves. Frequent transfers disrupt children’s schooling and prospects, the financial burden of running two establishments mounts, and the life of a young widow is made harder still by the absence of administrative support.',
             },
-          ].map(({ title, text, delay }) => (
-            <article key={title} className="animate" style={{ '--delay': delay }}>
+            {
+              title: 'Early Retirement',
+              text:
+                'Unlike most government service, retirement in the forces is by length of service, not age — a Sepoy retires at about 35, a Havildar at 40, a Colonel at 54. Many must seek a second career while still raising children and settling a home, often without the qualifications the civilian market demands.',
+            },
+          ].map(({ title, text }, i) => (
+            <article key={title} className="reality-card animate" style={{ '--delay': `${i * 0.1}s` }}>
               <h3>{title}</h3>
               <p>{text}</p>
             </article>
@@ -154,360 +219,252 @@ const App = () => {
         </div>
       </section>
 
-      <section className="section panel animate">
+      {/* ─── About the Founders ───────────────────────────────────────── */}
+      <section id="founder" className="section panel animate">
         <div className="section-header">
           <span className="dot"></span>
-          <h2>Why We Exist</h2>
+          <h2>About the Founders</h2>
         </div>
         <p>
-          In the shadow of India's bravest, families often face unimaginable challenges. Indian Brave
-          Hearts was born from the belief that every sacrifice deserves honor, and every survivor
-          deserves support. We bridge the gap between government aid and personal needs, offering
-          holistic care that restores hope and builds resilience.
+          Indian Bravehearts was built by people who have lived the life it serves — a soldier who
+          spent a career on the nation’s hardest frontiers, and an officer’s wife who has carried the
+          story of the fraternity’s families to stages across the country and the world.
         </p>
-        <p>
-          Join us in this noble cause. Your support helps heal wounds, strengthens communities, and
-          ensures that the legacy of our heroes lives on through the families they left behind.
-        </p>
-      </section>
 
-      <section id="about" className="section panel animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>About Indian Brave Hearts</h2>
+        <div className="founder-grid">
+          <div className="founder-aside">
+            {founderPhoto ? (
+              <img className="founder-photo" src={founderPhoto} alt="Colonel DK Dass" />
+            ) : (
+              <div className="founder-photo-placeholder" aria-hidden="true">DKD</div>
+            )}
+            <span className="founder-name">Colonel DK Dass</span>
+            <span className="founder-role">Founder &amp; Chairman</span>
+          </div>
+          <div className="founder-body">
+            <p>
+              Colonel DK Dass is, in his own words, a “Fauji to the Core.” Born into a defence family
+              — his father an Air Force officer — he was schooled at the Rashtriya Military School,
+              Bangalore. After graduating from Delhi University he was commissioned into the Indian
+              Army as a Gunner (Artillery), retiring as a Colonel after a demanding career on the
+              nation’s hardest frontiers: Sikkim on the China border, the icy heights of Siachen,
+              the volatile Line of Control, and the terrorism-hit Kupwara sector of the Kashmir
+              Valley — along with a tenure at the Directorate General of Quality Assurance, Ministry
+              of Defence.
+            </p>
+            <p>
+              After the Army, he became an accomplished Rotarian with the Rotary Club of Delhi South
+              Metropolitan, devoting two decades to social and welfare projects for the
+              underprivileged. Drawing on first-hand knowledge of the travails of armed-forces
+              personnel and their families, he founded Indian Bravehearts — a trust focused wholly on
+              the welfare, rehabilitation and wellbeing of veterans, their families and war widows
+              (Veer Naaris).
+            </p>
+            <ul className="founder-recognitions">
+              <li><strong>Paul Harris Fellow</strong> — Rotary International, District 3011.</li>
+              <li>President of his Home Club (2011–12), awarded the <strong>‘Diamond President’</strong> and <strong>‘Diamond Club’</strong> honours by the District Governor.</li>
+              <li>Recipient of a <strong>Citation</strong> from the President, Rotary International (Connecticut, USA), for dedicated and selfless service.</li>
+            </ul>
+            <blockquote className="founder-note">
+              “My efforts have been appreciated by the Hon’ble National Security Advisor, Sh Ajit
+              Doval KC, through a DO letter. I am also in regular touch with the Hon’ble Prime
+              Minister, Sh Narendra Modi ji, and apprise him on various national and strategic
+              issues.”
+            </blockquote>
+          </div>
         </div>
-        <p>
-          Founded in 2018, Indian Brave Hearts emerged from a deep commitment to honor the unsung
-          heroes who protect our nation. As a registered not-for-profit organization under the Indian
-          Trusts Act of 1882, we serve as a lifeline for the families of armed forces martyrs,
-          particularly widowed women who face profound loss and uncertainty.
-        </p>
-        <p>
-          Our journey began with a simple yet powerful vision: to ensure that no family of a martyr
-          walks alone. We provide comprehensive support—from immediate relief to long-term
-          empowerment—creating pathways for healing, education, and financial stability. Every
-          program is designed with compassion, rooted in the understanding that behind every uniform
-          is a family that deserves unwavering support.
-        </p>
-        <p>
-          Today, Indian Brave Hearts stands as a beacon of hope, connecting survivors with resources,
-          volunteers, and donors. We believe that by uplifting these families, we not only honor the
-          past but also build a stronger, more resilient India for the future.
-        </p>
-      </section>
 
-      <section className="section values-section animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>Our Guiding Principles</h2>
+        <div className="founder-grid founder-reverse">
+          <div className="founder-aside">
+            <img className="founder-photo" src={sarahPhoto} alt="Sarah D. Rawat" />
+            <span className="founder-name">Sarah D. Rawat</span>
+            <span className="founder-role">Co-Founder &amp; Speaker</span>
+          </div>
+          <div className="founder-body">
+            <p>
+              Sarah D. Rawat is a co-founder of Indian Bravehearts and the proud wife of a defence
+              officer — a vantage point from which she has witnessed first-hand the quiet sacrifices
+              made by the families of the armed forces. An MBA specialising in marketing and
+              advertising, she stepped away from a corporate career as a Business Development Manager
+              to devote herself to social work, and today leads the trust’s efforts for the wives of
+              defence martyrs (Veer Naaris) and the wider cause of women’s empowerment.
+            </p>
+            <p>
+              A motivational speaker and stage performer, Sarah has carried the story of martyrs’
+              wives and the message of women’s empowerment to audiences across India and abroad —
+              including two TEDx stages, JoshTalks, SheThePeople TV, and diplomatic events for several
+              embassies in Delhi. She is also a published author; her debut novel,
+              <em> Breaking Down the Riverine Girl</em>, is available across major platforms.
+            </p>
+            <ul className="founder-recognitions">
+              <li><strong>Rex Karamveer Global Fellowship</strong> (2019 &amp; 2023), supported by iCONGO and the United Nations.</li>
+              <li><strong>United Nations Women Icon Award</strong> — Embassy of the Czech Republic, Delhi (2021).</li>
+              <li><strong>51 Most Influential Women of Delhi</strong> — Brijbhumi Foundation (2019).</li>
+              <li>Honoured for her initiative for <strong>war widows of the Indian Army</strong> — Braveheart Martyrs Foundation, Hyderabad (2019), among numerous other national and international recognitions.</li>
+            </ul>
+            <blockquote className="founder-note campaign">
+              <strong>Green Periods —</strong> Sarah leads the trust’s flagship women’s-health
+              campaign built around MYCARA biodegradable sanitary pads, working to make safe, healthy
+              and dignified menstruation possible for every woman.
+            </blockquote>
+          </div>
         </div>
-        <ul className="value-list">
-          {[
-            {
-              heading: 'Honor & Respect:',
-              body: 'Every life lost in service is a testament to bravery. We treat each family with the reverence they deserve, preserving their dignity through every interaction.',
-              delay: '0s',
-            },
-            {
-              heading: 'Transparency & Trust:',
-              body: 'Our operations are open and accountable. Donors and beneficiaries alike can track the impact of their contributions, ensuring every rupee serves its purpose.',
-              delay: '0.1s',
-            },
-            {
-              heading: 'Empowerment & Independence:',
-              body: "We don't just provide aid—we equip families with skills, knowledge, and opportunities to rebuild their lives on their own terms.",
-              delay: '0.2s',
-            },
-            {
-              heading: 'Community & Solidarity:',
-              body: 'Strength comes from unity. We foster networks of support, where veterans, volunteers, and survivors stand together in resilience and hope.',
-              delay: '0.3s',
-            },
-          ].map(({ heading, body, delay }) => (
-            <li key={heading} className="animate" style={{ '--delay': delay }}>
-              <strong>{heading}</strong> {body}
-            </li>
-          ))}
-        </ul>
       </section>
 
-      <section className="section panel animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>Our Story</h2>
-        </div>
-        <p>
-          Indian Brave Hearts was inspired by real stories of courage and loss. We witnessed firsthand
-          how families of martyrs often grapple with financial hardship, emotional trauma, and social
-          isolation. Determined to make a difference, our founders—veterans and civilians alike—came
-          together to create a platform that bridges gaps and amplifies voices.
-        </p>
-        <p>
-          From humble beginnings, we've grown into a trusted organization, partnering with armed
-          forces, NGOs, and philanthropists. Each success story, like that of a widow who became a
-          successful entrepreneur, fuels our passion to expand our reach and deepen our impact.
-        </p>
-      </section>
-
+      {/* ─── Our Work / Projects Executed ─────────────────────────────── */}
       <section id="work" className="section panel animate">
         <div className="section-header">
           <span className="dot"></span>
-          <h2>Our Work: Transforming Lives</h2>
+          <h2>Our Work</h2>
         </div>
         <p>
-          At Indian Brave Hearts, our work is a testament to the power of compassion and action. We
-          address the multifaceted challenges faced by families of martyrs, from immediate crises to
-          lifelong aspirations. Our programs are holistic, evidence-based, and tailored to empower
-          individuals while honoring their resilience.
-        </p>
-        <p>
-          Through strategic partnerships and community-driven initiatives, we create sustainable
-          solutions that foster independence, healing, and hope. Every program is a step toward
-          ensuring that the families of our heroes thrive, not just survive.
-        </p>
-      </section>
-
-      <section className="section grid-section">
-        {[
-          {
-            title: 'Rehabilitation & Counseling',
-            text: 'Loss leaves deep scars. Our mental health support includes trauma counseling, grief therapy, and peer support groups. We partner with psychologists to help families process their emotions and rebuild emotional strength.',
-            delay: '0s',
-          },
-          {
-            title: 'Vocational Empowerment',
-            text: "We offer tailored training in skills like tailoring, computer literacy, and entrepreneurship. Women like Sunita, who now runs a successful boutique, exemplify how our programs turn grief into growth and dependence into self-sufficiency.",
-            delay: '0.15s',
-          },
-          {
-            title: 'Education for the Future',
-            text: 'Education is non-negotiable. We provide scholarships, tutoring, and school supplies to ensure children of martyrs excel academically. Our mentorship programs connect students with role models, inspiring them to dream big.',
-            delay: '0.3s',
-          },
-        ].map(({ title, text, delay }) => (
-          <div key={title} className="feature-card animate" style={{ '--delay': delay }}>
-            <h3>{title}</h3>
-            <p>{text}</p>
-          </div>
-        ))}
-      </section>
-
-      <section className="section panel animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>Emergency Relief & Financial Aid</h2>
-        </div>
-        <p>
-          When families face immediate crises—medical emergencies, housing needs, or food
-          insecurity—we step in with targeted relief. Our emergency fund provides quick, dignified
-          support, often bridging the gap until long-term solutions take effect.
-        </p>
-        <p>
-          We also offer micro-loans and financial literacy workshops, helping widows manage finances
-          and build savings. These initiatives not only alleviate hardship but also instill confidence
-          and control over their futures.
-        </p>
-      </section>
-
-      <section className="section panel animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>Community Outreach & Awareness</h2>
-        </div>
-        <p>
-          Raising awareness is key to change. We conduct workshops, seminars, and media campaigns to
-          educate the public about the needs of martyr families. By fostering empathy and
-          understanding, we build a society that values and supports its protectors.
-        </p>
-        <p>
-          Our outreach extends to schools and communities, where we share stories of courage and
-          resilience. These efforts not only garner support but also inspire a new generation to
-          honor our armed forces.
-        </p>
-      </section>
-
-      <section id="supporters" className="section panel supporters-overview animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>Our Supporters: Pillars of Strength</h2>
-        </div>
-        <p>
-          Indian Brave Hearts thrives on the generosity and dedication of a diverse community of
-          supporters. From the valiant men and women of India's armed forces to everyday citizens
-          moved by stories of sacrifice, our partners form the backbone of our mission. Together, we
-          create a network of care that reaches every corner of need.
-        </p>
-        <div className="supporter-grid">
-          {[
-            {
-              icon: 'ARMY',
-              label: 'Indian Army',
-              sub: 'Our founding partners, providing guidance and resources.',
-              delay: '0s',
-            },
-            {
-              icon: 'NAVY',
-              label: 'Indian Navy',
-              sub: 'Supporting maritime families with specialized outreach.',
-              delay: '0.15s',
-            },
-            {
-              icon: 'AIR',
-              label: 'Indian Air Force',
-              sub: 'Collaborating on aviation-related welfare programs.',
-              delay: '0.3s',
-            },
-          ].map(({ icon, label, sub, delay }) => (
-            <div key={icon} className="supporter-card animate" style={{ '--delay': delay }}>
-              <div className="supporter-icon">{icon}</div>
-              <p>{label}</p>
-              <small>{sub}</small>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="section panel animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>Corporate & Philanthropic Partners</h2>
-        </div>
-        <p>
-          Leading corporations recognize the value of supporting our heroes' families. Through CSR
-          initiatives, they fund vocational training, education scholarships, and emergency relief.
-          Companies like Tata, Reliance, and Infosys have partnered with us, demonstrating how
-          business can drive social change.
-        </p>
-        <p>
-          Individual philanthropists and foundations provide the flexibility to address unique needs.
-          Their contributions enable us to innovate and scale programs that make a lasting difference.
-        </p>
-      </section>
-
-      <section className="section panel animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>Volunteers & Community Heroes</h2>
-        </div>
-        <p>
-          Our volunteers are the heart of Indian Brave Hearts. From retired officers mentoring youth
-          to young professionals organizing events, each person brings passion and purpose. NGOs and
-          community groups amplify our efforts, creating a ripple effect of kindness.
-        </p>
-        <p>
-          Stories abound of volunteers who found their calling through our work. Like Rajesh, a
-          corporate executive who now dedicates weekends to teaching computer skills to widows,
-          showing how one person's time can change lives.
-        </p>
-      </section>
-
-      <section className="section panel animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>Join Our Network</h2>
-        </div>
-        <p>
-          Whether you're an individual, a corporation, or an organization, there's a place for you in
-          our mission. Partner with us through donations, volunteering, or advocacy. Together, we can
-          ensure that every family of a martyr receives the support they deserve.
-        </p>
-        <p>
-          Contact us today to explore partnership opportunities. Your involvement not only honors the
-          past but also secures a brighter future for India's bravest families.
-        </p>
-      </section>
-
-      <section id="help" className="section panel animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>How Can You Help? Your Role in Healing</h2>
-        </div>
-        <p>
-          The families of India's martyrs have given everything for our safety and freedom. Now, it's
-          our turn to give back. Whether you're an individual, a business, or a community leader,
-          your support can transform lives. Here are meaningful ways to get involved and make a real
-          difference.
+          Our work is a testament to action over sentiment. From honouring the fallen to rebuilding
+          livelihoods, every project is designed to deliver dignity and practical support to the
+          fraternity and its families. Among the projects executed:
         </p>
         <ul className="help-list">
           {[
             {
-              heading: 'Donate Generously:',
-              body: 'Contribute to our funds for rehabilitation, education, and emergency relief. Even small amounts add up to provide counseling, school supplies, and livelihood training.',
-              delay: '0s',
+              heading: 'National Balidan Awards:',
+              body: 'Instituted to honour and support the War Widows of the nation.',
             },
             {
-              heading: 'Sponsor Programs:',
-              body: "Fund vocational workshops or scholarships. Imagine sponsoring a widow's tailoring course—your investment could help her start a business and regain independence.",
-              delay: '0.1s',
+              heading: 'Prosthetic Hands:',
+              body: 'Supplied free of cost to disabled veterans and family members.',
             },
             {
-              heading: 'Volunteer Your Skills:',
-              body: 'Offer mentorship in career development, teach computer literacy, or provide emotional support. Volunteers like you bring hope and practical help to those in need.',
-              delay: '0.2s',
+              heading: 'Skill Training:',
+              body: 'Organised for the families of serving soldiers to build self-reliance.',
             },
             {
-              heading: 'Corporate Partnerships:',
-              body: 'Through CSR, sponsor events, awareness campaigns, or skill-building initiatives. Companies can create employee volunteer programs that foster team spirit and social impact.',
-              delay: '0.3s',
+              heading: 'Awareness & Counselling:',
+              body: 'Motivational seminars, workshops and counselling in colleges and schools about the Armed Forces.',
             },
             {
-              heading: 'Spread Awareness:',
-              body: 'Share our stories on social media, talk to friends and family, or organize local fundraisers. Your voice can inspire others to join this noble cause.',
-              delay: '0.4s',
+              heading: 'Problem Resolution:',
+              body: 'Taking up the problems of veterans and widows with the Ministry of Defence and Service Headquarters.',
             },
-          ].map(({ heading, body, delay }) => (
-            <li key={heading} className="animate" style={{ '--delay': delay }}>
+            {
+              heading: 'Financial Assistance:',
+              body: 'Loans and aid for education, girl-child marriages, and self-help groups.',
+            },
+            {
+              heading: 'Liaison with the Forces:',
+              body: 'Regular correspondence with the MoD and Service HQs on service and welfare matters.',
+            },
+          ].map(({ heading, body }, i) => (
+            <li key={heading} className="animate" style={{ '--delay': `${i * 0.07}s` }}>
               <strong>{heading}</strong> {body}
             </li>
           ))}
         </ul>
       </section>
 
-      <section className="section panel animate">
+      {/* ─── How Can You Help ─────────────────────────────────────────── */}
+      <section id="help" className="section panel animate">
         <div className="section-header">
           <span className="dot"></span>
-          <h2>Why Your Support Matters</h2>
+          <h2>How Can You Help</h2>
         </div>
         <p>
-          Behind every martyr is a family grappling with profound loss. Widows often face financial
-          instability, emotional trauma, and societal challenges. Children may struggle with education
-          and identity. Your support bridges these gaps, providing not just aid but dignity and
-          opportunity.
+          Donations, in-kind support, gifting, professional services and volunteering all sustain our
+          projects — and no contribution is too trivial. You can make a real difference in their
+          lives by choosing to:
+        </p>
+        <ul className="help-list">
+          {[
+            {
+              heading: 'Organise CSR projects:',
+              body: 'Corporate Social Responsibility initiatives for veterans, war widows and their families.',
+            },
+            {
+              heading: 'Support our in-house projects:',
+              body: 'Back the ongoing welfare and rehabilitation work directly.',
+            },
+            {
+              heading: 'Adopt for life:',
+              body: 'Support a battle casualty, disabled soldier, war widow, aged veteran, an orphan or a braveheart (woman / girl child).',
+            },
+            {
+              heading: 'Maintain a facility:',
+              body: 'Sustain a War Memorial, an Old Age / Veteran’s Home, an Ex-Servicemen facility or a hostel.',
+            },
+            {
+              heading: 'Enable rehabilitation:',
+              body: 'Provide jobs, vocational and on-the-job training, business opportunities through cooperatives and self-help groups, scholarships, subsistence allowance, support for a girl child’s marriage, or repair of homes for poor families.',
+            },
+          ].map(({ heading, body }, i) => (
+            <li key={heading} className="animate" style={{ '--delay': `${i * 0.07}s` }}>
+              <strong>{heading}</strong> {body}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* ─── Bravehearts of Society (secondary mission) ───────────────── */}
+      <section className="section panel society-panel animate">
+        <div className="section-header">
+          <span className="dot"></span>
+          <h2>The Bravehearts of Society</h2>
+        </div>
+        <p>
+          Beyond the forces fraternity, Indian Bravehearts also stands with the “Bravehearts of
+          Society” — those who battle, day in and day out, for survival against hardship and unsafe
+          surroundings. They include abandoned parents who lack basic support systems, the helpless
+          victims of rape, acid attacks and human trafficking, street children, and the abandoned
+          girl child and orphans living shattered lives.
         </p>
         <p>
-          By helping Indian Brave Hearts, you're honoring the ultimate sacrifice. You're ensuring
-          that families don't just survive—they thrive. Your contribution creates ripples of change,
-          building a stronger, more compassionate India where heroes' legacies live on through
-          empowered families.
+          These bravehearts, too, deserve love and care — to be nurtured back to normalcy so they may
+          live a reasonably comfortable second life.
         </p>
       </section>
 
-      <section className="section panel animate">
+      {/* ─── Governing Body ───────────────────────────────────────────── */}
+      <section id="leadership" className="section panel animate">
         <div className="section-header">
           <span className="dot"></span>
-          <h2>Get Started Today</h2>
+          <h2>Governing Body</h2>
         </div>
         <p>
-          Ready to make an impact? Start with a donation, sign up to volunteer, or reach out for
-          partnership ideas. Every action counts. Contact us at braveheartsindian@gmail.com or visit
-          our donate page to begin your journey of giving.
+          Indian Bravehearts is guided by a body of distinguished veterans and officers who bring
+          decades of service and leadership to the cause.
         </p>
-        <p>
-          Together, we can turn grief into growth, loss into legacy. Join Indian Brave Hearts and be
-          part of something truly extraordinary.
-        </p>
+        <div className="office-grid">
+          {[
+            { role: 'Patron', name: 'Lt Gen Arun Sahni' },
+            { role: 'Chairman', name: 'Colonel DK Dass' },
+            { role: 'President', name: 'Ravi Ranjan Choubey' },
+            { role: 'General Secretary', name: 'Capt BN Yadav' },
+            { role: 'Treasurer', name: 'Capt SK Trehan' },
+          ].map(({ role, name }, i) => (
+            <div key={role} className="leader-card animate" style={{ '--delay': `${i * 0.07}s` }}>
+              <p className="leader-role">{role}</p>
+              <p className="leader-name">{name}</p>
+            </div>
+          ))}
+        </div>
+        <div className="directors-block">
+          <h4>Directors</h4>
+          <ul className="directors-list">
+            <li>Maj Gen DN Asija</li>
+            <li>Commodore Nitin Rawat</li>
+            <li>Wg Cdr AK Pandey</li>
+            <li>Maj AK Shrivastav</li>
+          </ul>
+        </div>
       </section>
 
+      {/* ─── Donate ───────────────────────────────────────────────────── */}
       <section id="donate" className="section panel donate-panel animate">
         <div className="section-header">
           <span className="dot"></span>
-          <h2>Make a Donation: Change Lives Forever</h2>
+          <h2>Stand With Them</h2>
         </div>
         <p className="donate-copy">
-          Your generosity is the lifeline for families who have lost everything in service to our
-          nation. Every rupee you donate goes directly toward rehabilitation, education, and hope.
-          Tax-exempt under Sec 80G of Income Tax Act, 1961, your contribution is both impactful and
-          rewarding.
+          Your generosity rebuilds lives. Every contribution goes toward rehabilitation, education
+          and the dignity of those who gave everything for the nation. Donations are exempt from
+          Income Tax under Sec. 80G of the Income Tax Act, 1961.
         </p>
         <div className="donate-details">
           <p><strong>Account Name:</strong> INDIAN BRAVEHEARTS</p>
@@ -517,66 +474,22 @@ const App = () => {
           <p><strong>Account No:</strong> 920010062478401</p>
         </div>
         <p>
-          For donation receipts or tax exemption certificates, email us at
-          braveheartsindian@gmail.com with your payment details and address. We ensure every donation
-          is acknowledged and utilized transparently.
+          For donation receipts or an 80G tax-exemption certificate, email us at dilipkdass@gmail.com
+          with your payment details and address. Every contribution is acknowledged and utilised
+          transparently.
         </p>
         <button className="primary-button donate-pulse">Donate Now</button>
       </section>
 
-      <section className="section panel animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>How Your Donation Helps</h2>
-        </div>
-        <p>
-          Imagine funding a widow's vocational training, enabling her to support her children
-          independently. Or sponsoring a child's education, opening doors to a brighter future. Your
-          donation makes these stories real.
-        </p>
-        <ul className="help-list donation-tiers">
-          {[
-            { amount: '₹1,000:', impact: 'Provides counseling sessions for a grieving family.', delay: '0s' },
-            { amount: '₹5,000:', impact: "Funds a month's worth of school supplies for multiple children.", delay: '0.1s' },
-            { amount: '₹10,000:', impact: 'Supports a vocational training workshop for widows.', delay: '0.2s' },
-            { amount: '₹50,000:', impact: 'Enables emergency relief for a family in crisis.', delay: '0.3s' },
-          ].map(({ amount, impact, delay }) => (
-            <li key={amount} className="animate" style={{ '--delay': delay }}>
-              <strong>{amount}</strong> {impact}
-            </li>
-          ))}
-        </ul>
-        <p>
-          No amount is too small. Recurring donations ensure sustained support. Join our legacy of
-          compassion—donate today and witness the transformation.
-        </p>
-      </section>
-
-      <section className="section panel animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>Other Ways to Contribute</h2>
-        </div>
-        <p>
-          Beyond monetary donations, consider sponsoring a program, volunteering, or organizing a
-          fundraiser. For corporate donations or large gifts, contact us directly to discuss tailored
-          opportunities.
-        </p>
-        <p>
-          Your support isn't just charity—it's an investment in India's future. Thank you for
-          standing with Indian Brave Hearts.
-        </p>
-      </section>
-
+      {/* ─── Contact ──────────────────────────────────────────────────── */}
       <section id="contact" className="section panel contact-panel animate">
         <div className="section-header">
           <span className="dot"></span>
-          <h2>Contact Indian Brave Hearts</h2>
+          <h2>Contact Us</h2>
         </div>
         <p>
-          Your voice matters. Whether you have questions, want to partner, or need support, we're
-          here to listen and respond. Reach out through the form below or our direct channels. Every
-          conversation brings us closer to our shared mission.
+          Whether you wish to partner, volunteer, contribute or simply learn more, we would be glad
+          to hear from you. Reach out through the form below or our direct channels.
         </p>
         <div className="contact-grid">
           <input type="text" placeholder="Name *" />
@@ -592,50 +505,52 @@ const App = () => {
           <span className="dot"></span>
           <h2>Get in Touch Directly</h2>
         </div>
-        <p><strong>Phone:</strong> 9810266662, 9810166662</p>
-        <p><strong>Email:</strong> braveheartsindian@gmail.com</p>
-        <p><strong>Website:</strong> www.indianbravehearts.in</p>
+        <p><strong>Phone:</strong> +91 9810266662, +91 9810166662</p>
+        <p><strong>Email:</strong> dilipkdass@gmail.com</p>
+        <p><strong>Website:</strong> www.indianbravehearts.com</p>
+        <p><strong>Facebook:</strong> /IndianBravehearts</p>
+        <p><strong>Based in:</strong> New Delhi, India</p>
         <p>
-          For donations, all payments are exempt from Income Tax under Sec 80G of Income Tax Act,
-          1961. Email us your payment details and address to receive an official IT exemption
-          certificate.
-        </p>
-      </section>
-
-      <section className="section panel animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>Visit Us</h2>
-        </div>
-        <p>
-          Located in the heart of Delhi, our office welcomes visitors for consultations,
-          partnerships, or volunteer orientations. Schedule a meeting to learn more about our work
-          and how you can contribute.
-        </p>
-        <p>
-          <strong>Address:</strong> [Office Address], New Delhi, India<br />
-          <strong>Office Hours:</strong> Monday to Friday, 9 AM - 6 PM
-        </p>
-      </section>
-
-      <section className="section panel animate">
-        <div className="section-header">
-          <span className="dot"></span>
-          <h2>Follow Our Journey</h2>
-        </div>
-        <p>
-          Stay connected through our social media channels for updates, success stories, and ways to
-          get involved. Your engagement inspires us to do more.
-        </p>
-        <p>
-          <strong>Social Media:</strong> Follow us on Facebook, Instagram, and Twitter
-          @IndianBraveHearts
+          All donations are exempt from Income Tax under Sec. 80G of the Income Tax Act, 1961. Email
+          us your payment details and address to receive an official exemption certificate.
         </p>
       </section>
 
       <footer className="site-footer">
         <div className="footer-tricolor" aria-hidden="true" />
-        <p>All rights reserved © INDIAN BRAVEHEARTS</p>
+        <div className="footer-inner">
+          <div className="footer-brand">
+            <img className="footer-logo" src={logo} alt="Indian Bravehearts logo" />
+            <strong>INDIAN BRAVEHEARTS</strong>
+            <span>Strong alone, stronger together.</span>
+            <img className="footer-flag" src={flag} alt="Flag of India" />
+          </div>
+          <div className="footer-col">
+            <h4>Get in Touch</h4>
+            <p>+91 9810266662, 9810166662</p>
+            <p>dilipkdass@gmail.com</p>
+            <p>www.indianbravehearts.com</p>
+            <p>New Delhi, India</p>
+          </div>
+          <div className="footer-col">
+            <h4>The Trust</h4>
+            <p>Registered under the Indian Trusts Act, 1882</p>
+            <p>Donations exempt under Sec. 80G, Income Tax Act, 1961</p>
+            <p>For the armed-forces fraternity — MoD &amp; MHA</p>
+          </div>
+          <div className="footer-col">
+            <h4>Quick Links</h4>
+            <a href="#about">Who We Are</a>
+            <a href="#founder">The Founder</a>
+            <a href="#work">Our Work</a>
+            <a href="#help">How You Can Help</a>
+            <a href="#donate">Donate</a>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p>© {new Date().getFullYear()} Indian Bravehearts. All rights reserved.</p>
+          <p>Honouring the sacrifice. Standing with the families left behind.</p>
+        </div>
       </footer>
     </div>
   );
