@@ -468,7 +468,6 @@ const App = () => {
           <h4>Directors</h4>
           <ul className="directors-list">
             <li>Maj Gen DN Asija</li>
-            <li>Commodore Nitin Rawat</li>
             <li>Wg Cdr AK Pandey</li>
             <li>Maj AK Shrivastav</li>
           </ul>
