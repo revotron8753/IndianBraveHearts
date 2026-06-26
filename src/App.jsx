@@ -68,7 +68,7 @@ const team = [
   },
   {
     name: 'Anurag Gupta',
-    role: 'Member',
+    role: 'Trustee — Fundraising',
     photo: anuragPhoto,
     initials: 'AG',
     bio: "A serial social-impact entrepreneur dedicated to change through education, sustainability and innovation. A Commonwealth Games athlete, former AVP – Business at Bharti Airtel and Co-founder of Carbon Mandi, he believes every child deserves quality education and every woman the chance to be financially independent — working towards a greener, stronger and more inclusive India.",
