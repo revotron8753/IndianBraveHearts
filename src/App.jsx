@@ -3,6 +3,7 @@ import logo from './public/Logo.jpeg';
 import anthemVideo from './public/Jan Gan Man.mp4';
 import founderPhoto from './public/Faces/Col. D.K. Dass.png';
 import sarahPhoto from './public/Faces/Sarah D Rawat.jpg';
+import anuragPhoto from './public/Faces/Anurag Gupta.jpg';
 import flag from './public/indian-flag.png';
 import aksharLogo from './public/Projects/Akshar/Photo from Piyush Pandey.jpg';
 import preetiPhoto from './public/Projects/Akshar/IMG-20260621-WA0034.jpg';
@@ -59,22 +60,26 @@ const team = [
     bio: "A defence officer’s wife and an MBA in marketing, Sarah is a motivational speaker (TEDx ×2) and a champion of women’s empowerment. She leads the trust’s work for war widows (Veer Naaris) and drives the Green Periods and Project Akshar initiatives.",
   },
   {
-    name: 'Hemant Keshav Sharma',
-    role: 'President',
-    photo: null,
-    initials: 'HKS',
-    bio: null,
+    name: 'Preeti Yadav',
+    role: 'Member',
+    photo: preetiPhoto,
+    initials: 'PY',
+    bio: "Founder of Queeniefied Events and the women’s community Swawlambani, State Director for Miss Universe (UP & Punjab) and a Sarojini Naidu Award honouree. A partner on Project Akshar, she brings her platform to the cause of education and women’s empowerment.",
   },
   {
-    name: 'Priyam Kapoor',
-    role: 'Executive Vice President',
+    name: 'Anurag Gupta',
+    role: 'Member',
+    photo: anuragPhoto,
+    initials: 'AG',
+    bio: "A serial social-impact entrepreneur dedicated to change through education, sustainability and innovation. A Commonwealth Games athlete, former AVP – Business at Bharti Airtel and Co-founder of Carbon Mandi, he believes every child deserves quality education and every woman the chance to be financially independent — working towards a greener, stronger and more inclusive India.",
+  },
+  {
+    name: 'Himangi Arora',
+    role: 'Member',
     photo: null,
-    initials: 'PK',
+    initials: 'HA',
     bio: null,
   },
-  { name: 'To be announced', role: 'Member', photo: null, initials: 'IB', bio: null, pending: true },
-  { name: 'To be announced', role: 'Member', photo: null, initials: 'IB', bio: null, pending: true },
-  { name: 'To be announced', role: 'Member', photo: null, initials: 'IB', bio: null, pending: true },
 ];
 
 const App = () => {

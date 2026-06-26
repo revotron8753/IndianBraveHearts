@@ -117,7 +117,7 @@ button, input, textarea {
 .scroll-progress-bar {
   position: fixed;
   top: 0; left: 0;
-  height: 3px;
+  height: 4px;
   background: linear-gradient(
     90deg,
     var(--tricolor-saffron) 33.33%,
@@ -129,6 +129,8 @@ button, input, textarea {
   background-repeat: no-repeat;
   z-index: 200;
   transition: width 0.12s linear;
+  /* keeps the white middle third visible over the white header */
+  box-shadow: 0 1px 2px rgba(10, 24, 52, 0.45), 0 1px 5px rgba(10, 24, 52, 0.18);
 }
 
 /* ─── Utility bar ────────────────────────────────────────────────────────────── */
