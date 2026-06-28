@@ -657,6 +657,150 @@ nav a:not(.donate-button):hover::after { width: 100%; }
   gap: 14px;
 }
 
+/* ─── Hero live chip (Project Akshar) ────────────────────────────────────────── */
+
+.hero-live-chip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(calc(-100% - 12px));
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.hero-live-chip:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(calc(-100% - 15px));
+}
+
+.hero-live-chip .live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #46c46a;
+  box-shadow: 0 0 0 3px rgba(70, 196, 106, 0.25);
+  animation: blinkDot 1s ease-in-out infinite;
+}
+
+.hero-live-chip .arrow { color: var(--gold-soft); font-size: 0.95rem; }
+
+/* ─── Featured project banner ────────────────────────────────────────────────── */
+
+.featured-akshar {
+  position: relative;
+  color: #fff;
+  background:
+    radial-gradient(120% 160% at 100% 0%, rgba(176, 141, 45, 0.3), transparent 55%),
+    linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+}
+
+.featured-akshar::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--tricolor-saffron) 33.33%,
+    #fff 33.33%, #fff 66.66%,
+    var(--tricolor-green) 66.66%
+  );
+}
+
+.featured-inner {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 42px 28px 46px;
+  display: flex;
+  align-items: center;
+  gap: 38px;
+}
+
+.featured-emblem {
+  width: clamp(150px, 20vw, 210px);
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.featured-emblem img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.featured-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: var(--gold-soft);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+
+.featured-badge .live-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #46c46a;
+  animation: blinkDot 1s ease-in-out infinite;
+}
+
+.featured-body h2 {
+  margin: 0 0 6px;
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+
+.featured-strap {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--gold-soft);
+  font-size: 1.1rem;
+}
+
+.featured-body > p {
+  margin: 0 0 22px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  max-width: 62ch;
+}
+
+.featured-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 /* ─── Impact strip ───────────────────────────────────────────────────────────── */
 
 .impact-strip {
@@ -1498,6 +1642,19 @@ textarea {
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32);
 }
 
+.project-badge {
+  width: clamp(120px, 16vw, 150px);
+  height: clamp(120px, 16vw, 150px);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: clamp(3.2rem, 7vw, 4.4rem);
+  line-height: 1;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+}
+
 .project-status {
   display: inline-flex;
   align-items: center;
@@ -1516,6 +1673,12 @@ textarea {
   border-radius: 50%;
   background: #46c46a;
   box-shadow: 0 0 0 3px rgba(70, 196, 106, 0.25);
+}
+
+/* past initiatives — no live green indicator */
+.project-status.past::before {
+  background: var(--gold-soft);
+  box-shadow: none;
 }
 
 .project-hero h3 {
@@ -1743,6 +1906,144 @@ textarea {
   transform: rotate(45deg);
 }
 
+.pillar p { margin: 0; color: var(--muted); line-height: 1.7; }
+
+.focus-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* ─── Initiative chips (home › Our Work) ─────────────────────────────────────── */
+
+.initiative-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  border-radius: 3px;
+  padding: 11px 18px;
+  font-family: var(--serif);
+  font-size: 0.98rem;
+  color: var(--navy);
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.chip:hover {
+  background: #faf8f2;
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+/* ─── Projects carousel ──────────────────────────────────────────────────────── */
+
+.initiatives-section { overflow: hidden; }
+
+.carousel {
+  position: relative;
+  overflow: hidden;
+  margin-top: 12px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+
+.carousel-track {
+  display: flex;
+  gap: 22px;
+  width: max-content;
+  animation: marquee 48s linear infinite;
+}
+
+.carousel:hover .carousel-track { animation-play-state: paused; }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.carousel-card {
+  flex: 0 0 300px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--gold);
+  border-radius: 4px;
+  padding: 22px;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.carousel-card:hover { box-shadow: var(--shadow); transform: translateY(-5px); }
+
+.carousel-logo {
+  height: 124px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border-radius: 3px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.carousel-logo img { max-height: 112px; max-width: 90%; object-fit: contain; }
+
+.carousel-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.carousel-status::before {
+  content: '';
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+}
+
+.carousel-status.ongoing { color: #2f8f43; }
+.carousel-status.ongoing::before { background: #46c46a; }
+
+.carousel-card h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.carousel-card > p {
+  margin: 0;
+  flex: 1;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.carousel-link {
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel { overflow-x: auto; }
+  .carousel-track { animation: none; }
+}
+
 .vision-band {
   background: var(--navy-2);
   border-top: 3px solid var(--gold);
@@ -1785,6 +2086,12 @@ textarea {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: rgba(255, 255, 255, 0.66);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 24px;
 }
 
 .gallery-title,
@@ -2129,6 +2436,17 @@ textarea {
   }
 
   .project-page { padding: 22px 16px 18px; }
+
+  .featured-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 24px;
+    padding: 34px 22px 38px;
+  }
+  .featured-emblem { width: min(60vw, 220px); }
+  .featured-badge { align-self: center; }
+  .featured-body > p { margin-left: auto; margin-right: auto; }
+  .featured-actions { justify-content: center; }
 
   .hero-section, .home-hero { min-height: auto; padding: 64px 24px 64px; }
 

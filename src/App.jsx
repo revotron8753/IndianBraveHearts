@@ -3,7 +3,6 @@ import logo from './public/Logo.jpeg';
 import anthemVideo from './public/Jan Gan Man.mp4';
 import founderPhoto from './public/Faces/Col. D.K. Dass.png';
 import sarahPhoto from './public/Faces/Sarah D Rawat.jpg';
-import anuragPhoto from './public/Faces/Anurag Gupta.jpg';
 import flag from './public/indian-flag.png';
 import aksharLogo from './public/Projects/Akshar/Photo from Piyush Pandey.jpg';
 import preetiPhoto from './public/Projects/Akshar/IMG-20260621-WA0034.jpg';
@@ -33,13 +32,232 @@ const aksharGallery = [
   { src: ak11, cap: 'Carrying the mission to a national platform' },
 ];
 
+// Eagerly load every photo in the project folders (Akshar handled separately above).
+const projectImages = import.meta.glob(
+  ['./public/Projects/**/*.jpg', '!./public/Projects/Akshar/**'],
+  { eager: true, import: 'default' }
+);
+
+const folderImages = (folder) =>
+  Object.entries(projectImages)
+    .filter(([key]) => key.includes(`/Projects/${folder}/`))
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([, url]) => url);
+
+// Each project folder also carries a single PNG brand logo.
+const projectLogos = import.meta.glob('./public/Projects/**/*.png', {
+  eager: true,
+  import: 'default',
+});
+
+const folderLogo = (folder) => {
+  const found = Object.entries(projectLogos).find(([key]) =>
+    key.includes(`/Projects/${folder}/`)
+  );
+  return found ? found[1] : null;
+};
+
+// Full content for each of the five core-pillar projects.
+const extraProjects = [
+  {
+    id: 'green-period',
+    name: 'Green Period',
+    icon: '🌿',
+    status: 'Past Initiative · Nationwide',
+    strap: 'For Mother Earth. For Every Woman.',
+    sub: 'Sustainability · Menstrual Health · Dignity',
+    blurb: 'Eco-friendly, biodegradable menstrual care for women across India.',
+    partner: { label: 'Mykara', note: 'biodegradable sanitary pads' },
+    intro: [
+      "Green Period is our pledge to the planet and to every woman — a movement to make menstruation safe, dignified and sustainable. In collaboration with Mykara, we promote biodegradable sanitary pads that protect women’s health without costing the earth.",
+      "Every year, conventional sanitary products add mountains of non-biodegradable plastic to our landfills. Green Period offers a better way: eco-friendly products that decompose naturally, paired with awareness drives that break the silence around menstrual health across India.",
+    ],
+    highlights: [
+      { big: '100%', label: 'biodegradable — products that return to the earth' },
+      { big: 'Zero', label: 'plastic, waste and shame removed from the cycle' },
+      { big: 'Every Woman', label: 'safe, sustainable choices, across India' },
+    ],
+    focus: [
+      { title: 'Sustainable by Design', text: 'Biodegradable pads, with Mykara, that decompose naturally — cutting the plastic waste of conventional products.' },
+      { title: 'Menstrual Dignity', text: 'Safe, hygienic and affordable products so no woman has to compromise her health or her dignity.' },
+      { title: 'Awareness & Education', text: 'Breaking taboos through open conversation and community sessions on menstrual health.' },
+      { title: 'For Mother Earth', text: 'A cleaner planet, one cycle at a time — protecting the environment for the generations to come.' },
+    ],
+    quote: 'For Mother Earth. For every woman — healthy periods, a healthier planet.',
+    // NOTE: placeholder sample numbers — replace with real figures before launch.
+    metrics: [
+      { v: '15,000+', l: 'Pads Distributed' },
+      { v: '6,000+', l: 'Women Reached' },
+      { v: '35', l: 'Awareness Drives' },
+      { v: '₹4.5 L', l: 'Funds Raised' },
+    ],
+  },
+  {
+    id: 'handloom',
+    name: 'Handloom',
+    icon: '🧵',
+    status: 'Past Initiative · Across India',
+    strap: 'Be Vocal for Local.',
+    sub: 'Heritage · Artisans · Vocal for Local',
+    blurb: 'Empowering India’s handloom weavers with a platform, visibility and market access.',
+    intro: [
+      "Handloom is our tribute to the hands that weave India’s heritage. Honouring the Prime Minister’s call to be Vocal for Local, we work directly with handloom artisans and craft communities — giving the weavers of our nation the platform, visibility and market access their artistry deserves.",
+      "Behind every handwoven textile is a family, a tradition and centuries of skill. Yet too many artisans struggle to reach the audiences who value authentic Indian craft. Handloom bridges that gap — connecting makers to markets and keeping a living heritage alive.",
+    ],
+    highlights: [
+      { big: 'Vocal for Local', label: 'the swadeshi promise, in action' },
+      { big: 'Artisan-First', label: 'weavers and crafts at the centre' },
+      { big: 'Living Heritage', label: 'tradition, sustained for the future' },
+    ],
+    focus: [
+      { title: 'Vocal for Local', text: 'Championing indigenous weavers and the swadeshi spirit, in answer to the nation’s call.' },
+      { title: 'Platform & Visibility', text: 'Showcasing artisans’ craft to audiences who value authentic Indian heritage.' },
+      { title: 'Market Access', text: 'Direct routes to buyers, exhibitions and fair opportunities that sustain livelihoods.' },
+      { title: 'Preserving Heritage', text: 'Keeping traditional weaves and crafts alive for the next generation.' },
+    ],
+    quote: 'Be Vocal for Local — every thread tells the story of India.',
+    // NOTE: placeholder sample numbers — replace with real figures before launch.
+    metrics: [
+      { v: '120+', l: 'Artisans Supported' },
+      { v: '8', l: 'Exhibitions Held' },
+      { v: '500+', l: 'Products Showcased' },
+      { v: '₹3 L', l: 'Funds Raised' },
+    ],
+  },
+  {
+    id: 'women-empowerment',
+    name: 'Women Empowerment',
+    icon: '💪',
+    status: 'Past Initiative · Nationwide',
+    strap: 'Restart. Rebuild. Rise.',
+    sub: 'Career Restart · Mentorship · Independence',
+    blurb: 'Helping women return to work and become financially independent leaders.',
+    intro: [
+      "Women Empowerment is about second chances and new beginnings. Through our Career Restart Series and mentorship programmes, we help women re-enter the workforce, discover work-from-home opportunities, and build the skills and confidence to lead.",
+      "Talent does not disappear during a career break — it simply waits for an opportunity. We create that opportunity, walking with women as they restart, rebuild and rise into financially independent leaders within their families and communities.",
+    ],
+    highlights: [
+      { big: 'Restart', label: 'back to work, on her own terms' },
+      { big: 'Rebuild', label: 'skills, confidence and income' },
+      { big: 'Rise', label: 'independent women, stronger families' },
+    ],
+    focus: [
+      { title: 'Career Restart Series', text: 'Structured programmes that help women return to work after a break.' },
+      { title: 'Mentorship & Guidance', text: 'One-on-one support and role models who light the way forward.' },
+      { title: 'Skills for Independence', text: 'Practical, market-ready skills and work-from-home pathways.' },
+      { title: 'Leadership', text: 'The confidence to lead at home, at work and in the community.' },
+    ],
+    quote: 'Restart. Rebuild. Rise — when a woman rises, her whole family rises with her.',
+    // NOTE: placeholder sample numbers — replace with real figures before launch.
+    metrics: [
+      { v: '800+', l: 'Women Mentored' },
+      { v: '150+', l: 'Careers Restarted' },
+      { v: '45', l: 'Sessions Held' },
+      { v: '₹2.5 L', l: 'Funds Raised' },
+    ],
+  },
+  {
+    id: 'child-welfare',
+    name: 'Child Welfare',
+    icon: '👧',
+    status: 'Past Initiative · Across India',
+    strap: 'Every Child. Every Right.',
+    sub: 'Education · Rights · Opportunity',
+    blurb: 'Education and support so every child can learn, grow and lead.',
+    intro: [
+      "Child Welfare begins with a simple belief: education is every child’s birthright. Through our education initiatives under Indian Bravehearts, we open doors to learning, resources and support for the children who need them most.",
+      "A child with access to education is a changemaker in the making. We invest in the next generation — building confident, capable young people through learning, mentorship and the support systems that help them thrive.",
+    ],
+    highlights: [
+      { big: 'Every Child', label: 'no one left behind' },
+      { big: 'Every Right', label: 'education as a birthright' },
+      { big: 'Next Generation', label: 'changemakers in the making' },
+    ],
+    focus: [
+      { title: 'Right to Learn', text: 'Access to education for every child, regardless of circumstance.' },
+      { title: 'Resources & Support', text: 'Books, materials and learning environments that make school possible.' },
+      { title: 'Mentorship', text: 'Guidance and role models who help children dream bigger.' },
+      { title: 'Building Changemakers', text: 'Confident, capable young leaders for tomorrow’s India.' },
+    ],
+    quote: 'Every child. Every right — because a learning child is a nation’s brightest hope.',
+    // NOTE: placeholder sample numbers — replace with real figures before launch.
+    metrics: [
+      { v: '2,000+', l: 'Children Supported' },
+      { v: '18', l: 'Schools Reached' },
+      { v: '1,500+', l: 'Learning Kits Given' },
+      { v: '₹6 L', l: 'Funds Raised' },
+    ],
+  },
+  {
+    id: 'global-events',
+    name: 'Global Events',
+    icon: '🌍',
+    status: 'Past Initiative · Global',
+    strap: 'Taking India to the World.',
+    sub: 'Culture · Diplomacy · India to the World',
+    blurb: 'Representing India’s culture and values on global platforms with embassies and diplomats.',
+    intro: [
+      "Global Events carries the soul of India to the world stage. In partnership with diplomats and embassies, we represent India’s culture, cuisine, art and values at international platforms — as cultural ambassadors for a proud and vibrant nation.",
+      "From food and fabric to art and tradition, India’s story deserves a global audience. Through curated cultural events and diplomatic collaborations, we showcase that story — one celebration at a time.",
+    ],
+    highlights: [
+      { big: 'India to the World', label: 'culture without borders' },
+      { big: 'Embassy Partners', label: 'diplomatic collaborations' },
+      { big: 'Ambassadors', label: 'the soul of India, abroad' },
+    ],
+    focus: [
+      { title: 'Cultural Diplomacy', text: 'Partnering with embassies and diplomats to represent India abroad.' },
+      { title: 'Art, Food & Heritage', text: 'Showcasing the colour, cuisine and craft of India.' },
+      { title: 'India’s Values', text: 'Carrying the nation’s spirit and ethos to the world.' },
+      { title: 'Cultural Ambassadors', text: 'Building bridges between India and the world, one event at a time.' },
+    ],
+    quote: 'Taking India to the world — showcasing the soul of India, one event at a time.',
+    // NOTE: placeholder sample numbers — replace with real figures before launch.
+    metrics: [
+      { v: '25+', l: 'Events Hosted' },
+      { v: '12', l: 'Embassy Partners' },
+      { v: '15', l: 'Countries Reached' },
+      { v: '10,000+', l: 'People Reached' },
+    ],
+  },
+].map((p) => {
+  const folder =
+    p.id === 'green-period' ? 'Green Periods'
+      : p.id === 'handloom' ? 'Handloom'
+      : p.id === 'women-empowerment' ? 'Women Empowerment'
+      : p.id === 'child-welfare' ? 'Child Welfare'
+      : 'Global Events';
+  return { ...p, images: folderImages(folder), logo: folderLogo(folder) };
+});
+
 const projects = [
   {
     id: 'akshar',
     name: 'Project Akshar',
     blurb: 'Educating children & empowering women in the border villages of Kashmir.',
-    location: 'Kashmir Valley',
+    ongoing: true,
   },
+  ...extraProjects.map((p) => ({ id: p.id, name: p.name, blurb: p.blurb })),
+];
+
+// Projects shown in the homepage carousel (with logos + status).
+const carouselProjects = [
+  {
+    id: 'akshar',
+    name: 'Project Akshar',
+    logo: aksharLogo,
+    status: 'Ongoing · Kashmir Valley',
+    blurb: 'Educating children & empowering women in the border villages of Kashmir.',
+    ongoing: true,
+  },
+  ...extraProjects.map((p) => ({
+    id: p.id,
+    name: p.name,
+    logo: p.logo,
+    status: p.status,
+    blurb: p.blurb,
+    ongoing: false,
+  })),
 ];
 
 // Core team / trustees. To add a member's photo, import it above and set `photo`.
@@ -67,13 +285,6 @@ const team = [
     bio: "Founder of Queeniefied Events and the women’s community Swawlambani, State Director for Miss Universe (UP & Punjab) and a Sarojini Naidu Award honouree. A partner on Project Akshar, she brings her platform to the cause of education and women’s empowerment.",
   },
   {
-    name: 'Anurag Gupta',
-    role: 'Trustee — Fundraising',
-    photo: anuragPhoto,
-    initials: 'AG',
-    bio: "A serial social-impact entrepreneur dedicated to change through education, sustainability and innovation. A Commonwealth Games athlete, former AVP – Business at Bharti Airtel and Co-founder of Carbon Mandi, he believes every child deserves quality education and every woman the chance to be financially independent — working towards a greener, stronger and more inclusive India.",
-  },
-  {
     name: 'Himangi Arora',
     role: 'Member',
     photo: null,
@@ -93,6 +304,13 @@ const App = () => {
   const videoRef = useRef(null);
 
   const currentProject = projects.find((p) => p.id === view);
+  const genericProject = extraProjects.find((p) => p.id === view);
+  const lbImages =
+    view === 'akshar'
+      ? aksharGallery
+      : genericProject
+        ? genericProject.images.map((src) => ({ src, cap: genericProject.name }))
+        : [];
 
   const closeMenu = () => {
     setMenuOpen(false);
@@ -127,8 +345,8 @@ const App = () => {
   };
 
   const showPrev = () =>
-    setLightbox((i) => (i - 1 + aksharGallery.length) % aksharGallery.length);
-  const showNext = () => setLightbox((i) => (i + 1) % aksharGallery.length);
+    setLightbox((i) => (i - 1 + lbImages.length) % lbImages.length);
+  const showNext = () => setLightbox((i) => (i + 1) % lbImages.length);
 
   const toggleMute = () => {
     const video = videoRef.current;
@@ -264,7 +482,7 @@ const App = () => {
                     onClick={() => openProject(p.id)}
                   >
                     <span className="nm-title">
-                      <span className="nm-dot" aria-hidden="true" />
+                      {p.ongoing && <span className="nm-dot" aria-hidden="true" />}
                       {p.name}
                     </span>
                     <span className="nm-sub">{p.blurb}</span>
@@ -305,6 +523,15 @@ const App = () => {
             </button>
             <div className="hero-tricolor-bar" aria-hidden="true" />
             <div className="hero-copy">
+              <button
+                type="button"
+                className="hero-live-chip"
+                onClick={() => openProject('akshar')}
+              >
+                <span className="live-dot" aria-hidden="true" />
+                Live · Project Akshar
+                <span className="arrow" aria-hidden="true">→</span>
+              </button>
               <p className="eyebrow">In Service of Those Who Served</p>
               <h1>
                 For your tomorrow,<br />
@@ -319,6 +546,36 @@ const App = () => {
               <div className="hero-buttons">
                 <a className="primary-button" href="#about" onClick={(e) => handleNav(e, '#about')}>Our Mission</a>
                 <a className="secondary-button" href="#donate" onClick={(e) => handleNav(e, '#donate')}>Stand With Them</a>
+              </div>
+            </div>
+          </section>
+
+          {/* ─── Featured: Project Akshar (immediate attention) ───────────── */}
+          <section className="featured-akshar animate">
+            <div className="featured-inner">
+              <div className="featured-emblem">
+                <img src={aksharLogo} alt="Project Akshar logo" />
+              </div>
+              <div className="featured-body">
+                <span className="featured-badge">
+                  <span className="live-dot" aria-hidden="true" />
+                  Live Now · Ongoing Mission
+                </span>
+                <h2>Project Akshar</h2>
+                <p className="featured-strap">Lighting Up Futures in Kashmir</p>
+                <p>
+                  Right now, just kilometres from the Line of Control, we are equipping the classrooms
+                  of Kashmir’s border villages — educating children and empowering women where it
+                  matters most. This is our flagship mission, and it is happening today.
+                </p>
+                <div className="featured-actions">
+                  <button type="button" className="donate-button" onClick={() => openProject('akshar')}>
+                    Explore Project Akshar →
+                  </button>
+                  <a className="secondary-button" href="#donate" onClick={(e) => handleNav(e, '#donate')}>
+                    Donate Now
+                  </a>
+                </div>
               </div>
             </div>
           </section>
@@ -536,11 +793,40 @@ const App = () => {
                 </li>
               ))}
             </ul>
-            <div className="work-projects-cta">
-              <p>Explore our flagship on-ground initiative:</p>
-              <button type="button" className="primary-button" onClick={() => openProject('akshar')}>
-                View Project Akshar
-              </button>
+          </section>
+
+          {/* ─── Projects carousel ────────────────────────────────────────── */}
+          <section className="section initiatives-section animate">
+            <div className="section-header">
+              <span className="dot"></span>
+              <h2>Our Projects</h2>
+            </div>
+            <p>
+              From the border villages of Kashmir to the world stage — explore the initiatives
+              through which Indian Bravehearts serves the nation and its people.
+            </p>
+            <div className="carousel">
+              <div className="carousel-track">
+                {[...carouselProjects, ...carouselProjects].map((p, i) => (
+                  <button
+                    type="button"
+                    key={`${p.id}-${i}`}
+                    className="carousel-card"
+                    onClick={() => openProject(p.id)}
+                    aria-label={`View ${p.name}`}
+                    aria-hidden={i >= carouselProjects.length}
+                    tabIndex={i >= carouselProjects.length ? -1 : 0}
+                  >
+                    <div className="carousel-logo">
+                      <img src={p.logo} alt={`${p.name} logo`} />
+                    </div>
+                    <span className={`carousel-status${p.ongoing ? ' ongoing' : ''}`}>{p.status}</span>
+                    <h3>{p.name}</h3>
+                    <p>{p.blurb}</p>
+                    <span className="carousel-link">View Project →</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </section>
 
@@ -846,6 +1132,17 @@ const App = () => {
                 </div>
               </div>
 
+              {/* NOTE: placeholder sample numbers — replace with real figures before launch. */}
+              <div className="vision-band metrics-band">
+                <h4>Impact in <span>Numbers</span></h4>
+                <div className="metrics-grid">
+                  <div className="vision-item"><b>₹8.5 L</b><span>Funds Raised</span></div>
+                  <div className="vision-item"><b>1,200+</b><span>Children Reached</span></div>
+                  <div className="vision-item"><b>12</b><span>Schools Supported</span></div>
+                  <div className="vision-item"><b>40+</b><span>Volunteers Engaged</span></div>
+                </div>
+              </div>
+
               <h4 className="gallery-title">From the Ground</h4>
               <div className="project-gallery">
                 {aksharGallery.map((img, i) => (
@@ -925,6 +1222,110 @@ const App = () => {
         </main>
       )}
 
+      {genericProject && (
+        <main className="project-page">
+          <div className="project-breadcrumb">
+            <a href="#home" onClick={(e) => handleNav(e, '#home')}>Home</a>
+            <span aria-hidden="true">›</span>
+            <span>Projects</span>
+            <span aria-hidden="true">›</span>
+            <span className="current">{genericProject.name}</span>
+          </div>
+
+          <article className="project-feature animate">
+            <div className="project-hero">
+              {genericProject.logo ? (
+                <img className="project-emblem" src={genericProject.logo} alt={`${genericProject.name} logo`} />
+              ) : (
+                <div className="project-badge" aria-hidden="true">{genericProject.icon}</div>
+              )}
+              <div className="project-hero-text">
+                <span className={`project-status${genericProject.ongoing ? '' : ' past'}`}>{genericProject.status}</span>
+                <h3>{genericProject.name}</h3>
+                <p className="project-strap">{genericProject.strap}</p>
+                {genericProject.sub && <p className="project-sub">{genericProject.sub}</p>}
+              </div>
+            </div>
+
+            <div className="project-body">
+              {genericProject.intro.map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
+
+              {genericProject.partner && (
+                <div className="project-partners">
+                  <span className="label">In collaboration with</span>
+                  <span className="partner">{genericProject.partner.label}</span>
+                  <span className="sep">·</span>
+                  <span>{genericProject.partner.note}</span>
+                </div>
+              )}
+
+              <div className="project-facts">
+                {genericProject.highlights.map((h) => (
+                  <div className="fact" key={h.big}>
+                    <b>{h.big}</b>
+                    <span>{h.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              <h4 className="gallery-title">Our Focus</h4>
+              <div className="project-pillars focus-grid">
+                {genericProject.focus.map((f) => (
+                  <div className="pillar" key={f.title}>
+                    <h4>{f.title}</h4>
+                    <p>{f.text}</p>
+                  </div>
+                ))}
+              </div>
+
+              {genericProject.metrics && (
+                <div className="vision-band metrics-band">
+                  <h4>Impact in <span>Numbers</span></h4>
+                  <div className="metrics-grid">
+                    {genericProject.metrics.map((m) => (
+                      <div className="vision-item" key={m.l}>
+                        <b>{m.v}</b>
+                        <span>{m.l}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <blockquote className="akshar-quote">
+                <p>{genericProject.quote}</p>
+              </blockquote>
+
+              {genericProject.images.length > 0 && (
+                <>
+                  <h4 className="gallery-title">From the Ground</h4>
+                  <div className="project-gallery">
+                    {genericProject.images.map((src, i) => (
+                      <button
+                        type="button"
+                        key={src}
+                        className="gallery-item"
+                        onClick={() => setLightbox(i)}
+                        aria-label={`View photo from ${genericProject.name}`}
+                      >
+                        <img src={src} alt={`${genericProject.name} — photo ${i + 1}`} loading="lazy" />
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              <div className="project-cta">
+                <a className="primary-button" href="#donate" onClick={(e) => handleNav(e, '#donate')}>Support {genericProject.name}</a>
+                <a className="outline-button" href="#contact" onClick={(e) => handleNav(e, '#contact')}>Get Involved</a>
+              </div>
+            </div>
+          </article>
+        </main>
+      )}
+
       {lightbox !== null && (
         <div className="lightbox" onClick={() => setLightbox(null)} role="dialog" aria-modal="true">
           <button
@@ -944,8 +1345,8 @@ const App = () => {
             ‹
           </button>
           <figure className="lightbox-figure" onClick={(e) => e.stopPropagation()}>
-            <img src={aksharGallery[lightbox].src} alt={aksharGallery[lightbox].cap} />
-            <figcaption>{aksharGallery[lightbox].cap}</figcaption>
+            <img src={lbImages[lightbox].src} alt={lbImages[lightbox].cap} />
+            <figcaption>{lbImages[lightbox].cap}</figcaption>
           </figure>
           <button
             type="button"
