@@ -3,6 +3,7 @@ import logo from './public/Logo.jpeg';
 import anthemVideo from './public/Jan Gan Man.mp4';
 import founderPhoto from './public/Faces/Col. D.K. Dass.png';
 import sarahPhoto from './public/Faces/Sarah D Rawat.jpg';
+import anuragPhoto from './public/Faces/Anurag Gupta.jpg';
 import flag from './public/indian-flag.png';
 import aksharLogo from './public/Projects/Akshar/Photo from Piyush Pandey.jpg';
 import preetiPhoto from './public/Projects/Akshar/IMG-20260621-WA0034.jpg';
@@ -285,11 +286,11 @@ const team = [
     bio: "Founder of Queeniefied Events and the women’s community Swawlambani, State Director for Miss Universe (UP & Punjab) and a Sarojini Naidu Award honouree. A partner on Project Akshar, she brings her platform to the cause of education and women’s empowerment.",
   },
   {
-    name: 'Himangi Arora',
-    role: 'Member',
-    photo: null,
-    initials: 'HA',
-    bio: null,
+    name: 'Anurag Gupta',
+    role: 'Trustee — CSR & Partnerships',
+    photo: anuragPhoto,
+    initials: 'AG',
+    bio: "A serial social-impact entrepreneur committed to meaningful change through education, women’s empowerment, sustainability and innovation. A former AVP – Business at Bharti Airtel and co-founder of Carbon Mandi, he believes every child deserves quality education and every woman the chance to be financially independent — working to build a greener, stronger and more inclusive India.",
   },
 ];
 
