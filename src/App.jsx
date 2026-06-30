@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { Head } from 'vite-react-ssg';
 import logo from './public/Logo.jpeg';
 import anthemVideo from './public/Jan Gan Man.mp4';
 import founderPhoto from './public/Faces/Col. D.K. Dass.png';
@@ -59,7 +61,7 @@ const folderLogo = (folder) => {
 };
 
 // Full content for each of the five core-pillar projects.
-const extraProjects = [
+export const extraProjects = [
   {
     id: 'green-period',
     name: 'Green Period',
@@ -300,9 +302,15 @@ const App = () => {
   const [muted, setMuted] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [projOpen, setProjOpen] = useState(false);
-  const [view, setView] = useState('home');
   const [lightbox, setLightbox] = useState(null);
   const videoRef = useRef(null);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id: routeId } = useParams();
+  // The current "page" is derived entirely from the URL so each project has its
+  // own real, crawlable endpoint (e.g. /projects/akshar).
+  const view = routeId || 'home';
 
   const currentProject = projects.find((p) => p.id === view);
   const genericProject = extraProjects.find((p) => p.id === view);
@@ -320,8 +328,8 @@ const App = () => {
 
   const openProject = (id) => {
     setLightbox(null);
-    setView(id);
     closeMenu();
+    navigate(`/projects/${id}`);
     window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
@@ -329,20 +337,18 @@ const App = () => {
     e.preventDefault();
     closeMenu();
     setLightbox(null);
-    const scroll = () => {
-      if (hash === '#home') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        return;
-      }
-      const el = document.querySelector(hash);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    };
     if (view !== 'home') {
-      setView('home');
-      setTimeout(scroll, 70);
-    } else {
-      scroll();
+      // Go back to the home document, carrying the hash so the post-navigation
+      // effect below can scroll to the right section once it has mounted.
+      navigate(hash === '#home' ? '/' : `/${hash}`);
+      return;
     }
+    if (hash === '#home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const el = document.querySelector(hash);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
   const showPrev = () =>
@@ -385,6 +391,16 @@ const App = () => {
     return () => observer.disconnect();
   }, [view]);
 
+  // After navigating from a project page back to the home document with a hash
+  // (e.g. /#donate), scroll to that section once it has mounted.
+  useEffect(() => {
+    if (view !== 'home' || !location.hash) return undefined;
+    const el = document.querySelector(location.hash);
+    if (!el) return undefined;
+    const t = setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 80);
+    return () => clearTimeout(t);
+  }, [view, location.hash, location.key]);
+
   useEffect(() => {
     let link = document.querySelector("link[rel='icon']");
     if (!link) {
@@ -420,8 +436,42 @@ const App = () => {
     };
   }, [lightbox]);
 
+  // Per-route SEO metadata — each endpoint gets a unique title, description and
+  // canonical URL so search engines index every project page on its own.
+  const SITE_URL = 'https://www.indianbravehearts.com';
+  const seo =
+    view === 'akshar'
+      ? {
+          title: 'Project Akshar · Educating Kashmir’s Border Villages | Indian Bravehearts',
+          desc:
+            'Project Akshar equips classrooms in Kashmir’s border villages — educating children and empowering women just kilometres from the Line of Control.',
+          path: '/projects/akshar',
+        }
+      : genericProject
+        ? {
+            title: `${genericProject.name} · ${genericProject.strap} | Indian Bravehearts`,
+            desc: genericProject.blurb,
+            path: `/projects/${genericProject.id}`,
+          }
+        : {
+            title: 'Indian Bravehearts · In Service of Those Who Served',
+            desc:
+              'Indian Bravehearts is a registered trust supporting veterans, war widows and the families of India’s armed-forces martyrs through rehabilitation, education and dignified livelihood.',
+            path: '/',
+          };
+  const canonical = `${SITE_URL}${seo.path}`;
+
   return (
     <div className="app">
+      <Head>
+        <title>{seo.title}</title>
+        <meta name="description" content={seo.desc} />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={seo.title} />
+        <meta property="og:description" content={seo.desc} />
+        <meta property="og:url" content={canonical} />
+      </Head>
       <a className="skip-link" href="#home">Skip to main content</a>
       <div className="scroll-progress-bar" style={{ width: `${progress}%` }} />
 
